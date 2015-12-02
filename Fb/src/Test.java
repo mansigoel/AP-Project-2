@@ -1,5 +1,8 @@
 
-
+/**
+ * @author Mansi Goel, 2014062
+ * Vrinda Malhotra, 2014122
+ */
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -52,8 +55,31 @@ public class Test  {
 		//String code = request.getParameter("code");
 		// System.out.println("shvskshwvffwje");
 		//  String URLEncodedRedirectURI = URLEncoder.encode("http://localhost:8080/Potato/Test");
-		  String MY_ACCESS_TOKEN = "CAACEdEose0cBABaaFiQdSOrQzz3qZCAZBhGpjLhtGE1DDXc3ZC5Otmltq5unu2DZAxenZA6Ah4OZBb32AjXvNdfwp65hchfwMZCZCzgDfGKQd2Lboi3dTe8VqEmTfUyAlJrWPMDFa1CYZANYQX9MPcJwHXynzHmlZCwL5WjUZCyGQSmuenuCLLrZAoCDM3K0p8htf0QPWNZA9rUrkGgYbCtGZBa7bP";
+		  String MY_ACCESS_TOKEN = "CAACEdEose0cBALfX7V2Gmmy87Fh19UsJEVZCv6TOj9jfZBXFFK1wZACFiUwl7ReIwFldCaNseeBOHo6tXJnWhF2phWcMQlf6N5aWZBcVH1F1uXZB2pRTyCZCjFoBG9Q7TZAEb3YoHhBPzF27iMlefGoqtaHthsZA6ncbZAGZBfOzpMXlm85e0uwENcDZBsckMnUvtJtiYaZCRfhT03bDd2frdxAM";
 		 
+//		  String authURL = "https://graph.facebook.com/oauth/access_token?" +
+//		                "client_id=" + Test.APP_ID + "&" +
+//		                "redirect_uri=" + URLEncodedRedirectURI + "&" +
+//		                "client_secret=" + Test.APP_SECRET + "&" +
+//		                "code=" + code;
+//		 
+//		  URL url = new URL(authURL);
+//		 
+//		  String result = readURL(url);
+//		  String[] pairs = result.split("&");
+//		 
+//		  for (String pair : pairs) {
+//		 
+//		   String[] kv = pair.split("=");
+//		   if (kv[0].equals("access_token")) {
+//		    MY_ACCESS_TOKEN = kv[1];
+//		   }
+//		  }
+		  HashMap<Post, Integer> postVsLikeList = new HashMap<Post, Integer>();
+		  HashMap<Post, ArrayList<String>> postVsFriendsLikeList = new HashMap<Post, ArrayList<String>>();
+		  HashMap<String, Integer> friendsVsLikeCountList = new HashMap<String, Integer>();
+		  HashMap<String, ArrayList<String>> friendsVsWordsList = new HashMap<String, ArrayList<String>>();
+		  HashMap<Post, ArrayList<String>> postVsProminentWords = new HashMap<Post, ArrayList<String>>();
 		  ArrayList<String> stopwords = new ArrayList();
 	        FileInputStream fstream;
 	        try {
@@ -74,11 +100,7 @@ public class Test  {
 	            e.printStackTrace();
 	        }
 		 int j;
-		  HashMap<Post, Integer> postVsLikeList = new HashMap<Post, Integer>();
-		  HashMap<Post, ArrayList<String>> postVsFriendsLikeList = new HashMap<Post, ArrayList<String>>();
-		  HashMap<String, Integer> friendsVsLikeCountList = new HashMap<String, Integer>();
-		  HashMap<String, ArrayList<String>> friendsVsWordsList = new HashMap<String, ArrayList<String>>();
-		  HashMap<Post, ArrayList<String>> postVsProminentWords = new HashMap<Post, ArrayList<String>>();
+		  
 		  Connection<Post> myFeed;
 		  
 		  try {
@@ -97,7 +119,7 @@ public class Test  {
 		            ArrayList<String> Words = new ArrayList<String>();
 		            //ArrayList<String> words = new ArrayList<String>();
 		            for(List<Post> plist: myFeed)
-		  		  {
+		            {
 		            	//System.out.println(plist.size());
 		  			  for(Post post: plist){
 		  				  
@@ -166,25 +188,90 @@ public class Test  {
 		  					//postVsFriendsLikeList.put(post, (ArrayList<String>) friendslike);
 		  					//Long x = post.getLikesCount();
 		  					  System.out.println(postVsLikeList);
+		  					 
+		  					  }
 		  				  }
 		  				  
 		  			  }
 		  			  }
-		  		  }
 		  		  
 		  } catch (FacebookException e) {
 		    e.printStackTrace();
 		  }
+		  double p1=0,p2=0,p3=0,p4=0;
+		  for(Post p: postVsLikeList.keySet()){
+			  p4=p4+(postVsLikeList.get(p)*postVsLikeList.get(p));
+		  }
+		  double prec = Math.sqrt(p4/postVsLikeList.size());
+		  System.out.println("------------"+prec+"-------------");
+		  int c,x,z;
 		  
+		  for(Post p: postVsProminentWords.keySet()){
+			  p3=0;
+			  for(String s4: postVsProminentWords.get(p)){
+				  p2=1;
+				  for(String f: friendsVsWordsList.keySet()){
+					  c=0;
+					  for(String w: friendsVsWordsList.get(f)){
+						  if(s4.equals(w)){
+							  //p1=0.9;
+							  c++;
+						  }
+					  }
+					  if((c<=2)&&(c>=1)){
+						  p2=(0.7)*p2;
+					  }
+					  else if((c>=3)){
+						  p2=0.8*p2;
+					  }
+					  
+				  }
+				  p3=p3+p2;
+			  }
+			  
+			 double val3 = postVsLikeList.get(p);
+			 double val = prec;
+			 double val2 = 0;
+			 val2 = prec*p3;
+			
+			 //System.out.println("******"+val2);
+				 for(String f1: friendsVsLikeCountList.keySet()){
+					 //System.out.println(f1+"   "+friendsVsLikeCountList.get(f1));
+					 if((friendsVsLikeCountList.get(f1)>2)&&(friendsVsLikeCountList.get(f1)<5)){
+						 val=0.7*val;
+					 }
+					 else if(friendsVsLikeCountList.get(f1)>12){
+						 val=1*val;
+					 }
+					 else if(friendsVsLikeCountList.get(f1)>5){
+						 val=0.8*val;
+					 }
+				 }
+				 val = val*100000;
+				 val = (val+val2)/2;
+				 
+			// System.out.println("Type is         "+p.getType());
+			 
+			 if(val>200){
+				 val/=val/100;
+			 }
+			 while(val<1){
+				 val=val*10;
+			 }
+			 if(p.getType().equals("photo")){
+					// System.out.println("Prediction in pic:   "+val);
+					  val=val*15;
+			      }
+			 System.out.println("Predicted likes are: "+val+"\n"+"Actual Likes are "+val3+"\n");
+
+			/**
+			 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+			 */
+		  }
 		 
 		 // getServletConfig().getServletContext().getRequestDispatcher("/FriendsList.jsp").forward(request, response);
 		//response.getWriter().append("Served at: ").append("sdhdu");
 	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	
-
-	
 }
+
+
