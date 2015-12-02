@@ -54,24 +54,6 @@ public class Test  {
 		//  String URLEncodedRedirectURI = URLEncoder.encode("http://localhost:8080/Potato/Test");
 		  String MY_ACCESS_TOKEN = "CAACEdEose0cBABaaFiQdSOrQzz3qZCAZBhGpjLhtGE1DDXc3ZC5Otmltq5unu2DZAxenZA6Ah4OZBb32AjXvNdfwp65hchfwMZCZCzgDfGKQd2Lboi3dTe8VqEmTfUyAlJrWPMDFa1CYZANYQX9MPcJwHXynzHmlZCwL5WjUZCyGQSmuenuCLLrZAoCDM3K0p8htf0QPWNZA9rUrkGgYbCtGZBa7bP";
 		 
-//		  String authURL = "https://graph.facebook.com/oauth/access_token?" +
-//		                "client_id=" + Test.APP_ID + "&" +
-//		                "redirect_uri=" + URLEncodedRedirectURI + "&" +
-//		                "client_secret=" + Test.APP_SECRET + "&" +
-//		                "code=" + code;
-//		 
-//		  URL url = new URL(authURL);
-//		 
-//		  String result = readURL(url);
-//		  String[] pairs = result.split("&");
-//		 
-//		  for (String pair : pairs) {
-//		 
-//		   String[] kv = pair.split("=");
-//		   if (kv[0].equals("access_token")) {
-//		    MY_ACCESS_TOKEN = kv[1];
-//		   }
-//		  }
 		  ArrayList<String> stopwords = new ArrayList();
 	        FileInputStream fstream;
 	        try {
